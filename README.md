@@ -6,7 +6,7 @@
 - Fecha de entrega: 26/6/2026
 
 ## Link al deploy unificado
-[URL de Vercel o Netlify - COMPLETAR DESPUÉS DEL DEPLOY]
+[GitHub Pages](https://edummorenolp.github.io/PFO2-FrontEnd-DesarrolloDeSistemasWeb)
 
 ## Prompt exacto utilizado
 ```
