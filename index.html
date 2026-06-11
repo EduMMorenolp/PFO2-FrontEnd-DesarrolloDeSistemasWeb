@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFO2 - Prompt Engineering en Agentes de IA</title>
+    
+    <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for modern icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #161b26;
+            --bg-card: rgba(22, 27, 38, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --color-accent: #00b4d8;
+            --color-accent-rgb: 0, 180, 216;
+            --color-secondary: #7209b7;
+            --color-secondary-rgb: 114, 9, 183;
+            --glow-color: rgba(0, 180, 216, 0.15);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Abstract glowing backgrounds */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(var(--color-accent-rgb), 0.15) 0%, rgba(0,0,0,0) 70%);
+            top: -50px;
+            left: -50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(var(--color-secondary-rgb), 0.12) 0%, rgba(0,0,0,0) 70%);
+            bottom: -50px;
+            right: -50px;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Header Styles */
+        header {
+            text-align: center;
+            padding: 4rem 1.5rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .tag {
+            display: inline-block;
+            background: linear-gradient(90deg, rgba(var(--color-accent-rgb), 0.1) 0%, rgba(var(--color-secondary-rgb), 0.1) 100%);
+            border: 1px solid rgba(var(--color-accent-rgb), 0.3);
+            color: var(--color-accent);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 15px rgba(var(--color-accent-rgb), 0.1);
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #ffffff 30%, #a5f3fc 70%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            max-width: 650px;
+            margin: 0 auto 2rem;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            width: fit-content;
+            margin: 0 auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .meta-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-info i {
+            color: var(--color-accent);
+        }
+
+        .meta-divider {
+            width: 1px;
+            height: 14px;
+            background-color: var(--border-color);
+        }
+
+        /* Grid & Cards Container */
+        main {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            justify-content: center;
+        }
+
+        /* Info Section Styles */
+        .info-section {
+            width: 100%;
+            background: rgba(22, 27, 38, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(12px);
+        }
+
+        .info-section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .info-section-title i {
+            color: var(--color-accent);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .info-card-icon {
+            font-size: 1.5rem;
+            color: var(--color-accent);
+            background: rgba(var(--color-accent-rgb), 0.1);
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(var(--color-accent-rgb), 0.2);
+        }
+
+        .info-card:nth-child(2) .info-card-icon {
+            color: var(--color-secondary);
+            background: rgba(var(--color-secondary-rgb), 0.1);
+            border-color: rgba(var(--color-secondary-rgb), 0.2);
+        }
+
+        .info-card-text h4 {
+            font-size: 1rem;
+            color: #ffffff;
+            margin-bottom: 0.4rem;
+        }
+
+        .info-card-text p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .info-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--color-accent);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.75rem;
+            transition: color var(--transition-speed) ease;
+        }
+
+        .info-link:hover {
+            color: #ffffff;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            width: 100%;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(var(--color-accent-rgb), 0.05) 0%, rgba(var(--color-secondary-rgb), 0.05) 100%);
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(var(--color-accent-rgb), 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px var(--glow-color);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 2rem;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            background: linear-gradient(135deg, #fff 30%, var(--color-accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+        }
+
+        .card-description {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Buttons and Links */
+        .card-btn {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.9rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition-speed) ease;
+            width: 100%;
+            text-align: center;
+        }
+
+        .card:hover .card-btn {
+            background: linear-gradient(135deg, var(--color-accent) 0%, #0096c7 100%);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(var(--color-accent-rgb), 0.3);
+            color: #0b0f19;
+        }
+
+        .card-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Specific card customization */
+        .card--featured {
+            border-color: rgba(var(--color-secondary-rgb), 0.25);
+        }
+        .card--featured .card-icon {
+            background: linear-gradient(135deg, #fff 30%, var(--color-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card--featured:hover {
+            border-color: rgba(var(--color-secondary-rgb), 0.5);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 25px rgba(var(--color-secondary-rgb), 0.25);
+        }
+        .card--featured:hover .card-btn {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, #560bad 100%);
+            box-shadow: 0 4px 15px rgba(var(--color-secondary-rgb), 0.4);
+            color: #ffffff;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(5, 7, 12, 0.85);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-container {
+            background: #111622;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.92);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .modal-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .modal-btn--close {
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            justify-content: center;
+        }
+
+        .modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+            flex-grow: 1;
+            background-color: #0b0f19;
+            font-family: 'Consolas', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #e5e7eb;
+            position: relative;
+        }
+
+        .modal-body pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Custom Scrollbar for Modal Body and Card list */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Footer Styles */
+        footer {
+            border-top: 1px solid var(--border-color);
+            padding: 2rem 1.5rem;
+            background-color: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-content {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color var(--transition-speed) ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .footer-link:hover {
+            color: var(--color-accent);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding: 3rem 1rem 1rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .meta-info {
+                flex-direction: column;
+                gap: 0.5rem;
+                border-radius: 16px;
+                padding: 0.8rem 1.2rem;
+            }
+            .meta-divider {
+                display: none;
+            }
+            main {
+                padding: 1rem 1rem 3rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-container {
+                max-height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header section -->
+    <header>
+        <div class="tag">PFO2 - Prompt Engineering</div>
+        <h1>Prompt Engineering en Agentes de IA</h1>
+        <p class="subtitle">Comparativa de Landing Pages para "Grupo Clouds" generadas por diferentes agentes y modelos de lenguaje.</p>
+        
+        <div class="meta-info">
+            <span><i class="fa-regular fa-user"></i> Estudiante: <strong style="color: #fff;">Eduardo M Moreno</strong></span>
+            <div class="meta-divider"></div>
+            <span><i class="fa-regular fa-calendar"></i> Fecha: <strong id="current-date" style="color: #fff;">11 de junio, 2026</strong></span>
+        </div>
+    </header>
+
+    <!-- Main Content: Cards Grid -->
+    <main>
+        <div class="cards-grid">
+            
+            <!-- Card 1: Prompt -->
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="fa-regular fa-file-lines"></i></div>
+                    <h2 class="card-title">📄 Prompt utilizado</h2>
+                    <p class="card-description">Texto completo del prompt estructurado y las especificaciones obligatorias que se usaron para guiar la generación de ambas landing pages.</p>
+                </div>
+                <button class="card-btn" id="open-prompt-btn">
+                    <span>Ver prompt</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- Card 2: Agent 1 -->
+            <div class="card">
+                <div class="card-content">
+                    <div class="card-icon"><i class="fa-solid fa-robot"></i></div>
+                    <h2 class="card-title">🤖 Primer Agente</h2>
+                    <p class="card-description"><strong>OpenCode + DeepSeek-V4</strong><br>Landing Page generada usando OpenCode como entorno de agente autónomo y DeepSeek como modelo de lenguaje.</p>
+                </div>
+                <a href="landing-opencode.html" target="_blank" class="card-btn">
+                    <span>Ver landing page</span>
+                    <i class="fa-solid fa-up-right-from-square"></i>
+                </a>
+            </div>
+
+            <!-- Card 3: Agent 2 -->
+            <div class="card card--featured">
+                <div class="card-content">
+                    <div class="card-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <h2 class="card-title">🤖 Segundo Agente</h2>
+                    <p class="card-description"><strong>Antigravity + Claude 3.5 Sonnet</strong><br>Landing Page generada usando Antigravity como entorno de agente y Claude 3.5 Sonnet de Anthropic como modelo de lenguaje.</p>
+                </div>
+                <a href="landing-antigravity.html" target="_blank" class="card-btn">
+                    <span>Ver landing page</span>
+                    <i class="fa-solid fa-up-right-from-square"></i>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- Info Section: Metodología y Herramientas -->
+        <section class="info-section">
+            <h3 class="info-section-title">
+                <i class="fa-solid fa-circle-info"></i> Metodología y Herramientas de Desarrollo
+            </h3>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="fa-solid fa-microchip"></i></div>
+                    <div class="info-card-text">
+                        <h4>Agente & Modelo de IA</h4>
+                        <p>Esta portada de acceso y el desarrollo del proyecto fueron generados utilizando el agente autónomo <strong>Antigravity</strong> con el modelo de lenguaje <strong>Gemini 3.5 Flash (Low)</strong>.</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="fa-solid fa-comments"></i></div>
+                    <div class="info-card-text">
+                        <h4>Diseño y Optimización de Prompts</h4>
+                        <p>La ingeniería de prompts y la estructuración del prompt final se realizaron conversando con la versión web de <strong>DeepSeek Chat</strong>.</p>
+                        <a href="https://chat.deepseek.com/share/w1t9rkn1dxm3an8g14" target="_blank" class="info-link">
+                            <span>Ver conversación en DeepSeek</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer section -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-text">
+                Trabajo práctico PFO2 - Entrega final
+            </div>
+            <div class="footer-links">
+                <a href="#" class="footer-link"><i class="fa-brands fa-github"></i> Repositorio</a>
+                <a href="#" class="footer-link"><i class="fa-solid fa-graduation-cap"></i> Tecnicatura en Desarrollo de Software</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Prompt Modal Overlay -->
+    <div class="modal-overlay" id="prompt-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i class="fa-solid fa-code" style="color: var(--color-accent);"></i>
+                    <span>Prompt de Generación Utilizado</span>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-btn" id="copy-btn" title="Copiar al portapapeles">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>Copiar</span>
+                    </button>
+                    <button class="modal-btn modal-btn--close" id="close-modal-btn" aria-label="Cerrar modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <!-- INICIO DEL PROMPT REAL - REEMPLAZAR ESTE TEXTO CON EL PROMPT COMPLETO CUANDO SEA NECESARIO -->
+                <pre><code id="prompt-content">Rol: Actúa como un experto desarrollador front-end especializado en diseño de alta conversión, SEO semántico y accesibilidad (WCAG 2.1).
+
+Contexto y Objetivo:
+Necesito que generes el código HTML, CSS y JavaScript completo para una Landing Page moderna, 100% responsive y profesional. La página es para una empresa llamada "Grupo Clouds", que brinda servicios de desarrollo web moderno y profesional.
+
+Datos de marca (úsalos obligatoriamente):
+- Nombre de la empresa: Grupo Clouds
+- Eslogan (opcional, puedes inventar uno): Ejemplo: "Desarrollo web que despega tu negocio"
+- Paleta de colores (inspirada en un logo celeste y blanco):
+  * Color primario: Celeste (#00B4D8) o (#0096C7) - elige el que mejor contraste
+  * Color secundario: Azul profundo (#023E8A) - para acentos y botones
+  * Fondo general: Blanco (#FFFFFF)
+  * Fondo de secciones alternas: Celeste muy claro (#E0F7FA) o (#F0F9FF)
+  * Texto principal: Gris oscuro (#212529)
+  * Texto secundario: Gris (#6C757D)
+- Tipografía: 'Poppins' para títulos y 'Inter' o 'Open Sans' para textos. Usa Google Fonts.
+- Tono: Profesional, confiable, tecnológico, limpio y moderno.
+
+Estructura obligatoria (en este orden lógico):
+
+1. Header (Sticky):
+   - Logo: Texto "GRUPO CLOUDS" en negrita, color primario o azul profundo.
+   - Menú de navegación: Inicio, Servicios, Testimonios, Contacto.
+   - En móvil (768px): Menú hamburguesa (☰) que se despliega verticalmente con JS. Debe cerrarse al hacer clic en un enlace.
+   - Scroll suave al hacer clic en cualquier enlace del menú.
+
+2. Hero Section:
+   - Título H1 impactante: Ejemplo: "Desarrollo web moderno y profesional" (o similar, relacionado con Grupo Clouds).
+   - Texto de soporte (párrafo): Explicar que son expertos en crear soluciones web a medida.
+   - Botón CTA llamativo: "Cotiza tu proyecto →" con color de acento (azul profundo o celeste).
+   - Fondo degradado sutil o una forma geométrica de fondo.
+
+3. Sobre Nosotros / Descripción:
+   - Texto de mínimo 50 palabras explicando qué hace Grupo Clouds (desarrollo web profesional, sitios modernos, optimización, etc.).
+   - Destacar confianza, experiencia y enfoque en resultados.
+   - Puedes incluir un mini dato como "+50 proyectos entregados" o algo similar.
+
+4. Sección de Servicios:
+   - 3 tarjetas (cards) en grid (3 en desktop, 1 en móvil).
+   - Cada tarjeta debe tener:
+     * Ícono: Usar FontAwesome 6 (CDN incluido en head). Iconos sugeridos: 🌐 (globe), ⚡ (rocket), 🛡️ (shield).
+     * Título: "Desarrollo Web a Medida", "Optimización y Rendimiento", "Soporte y Mantenimiento" (o variantes similares).
+     * Descripción corta (15-20 palabras).
+     * Efecto hover: elevación (sombra más grande) y borde sutil.
+   - Fondo de esta sección: Celeste muy claro (#F0F9FF).
+
+5. Testimonios:
+   - 2 reseñas de clientes (en grid, lado a lado en desktop).
+   - Cada testimonio debe incluir:
+     * Foto de perfil: Placeholder circular con iniciales (ej: "MC" o usar UI Faces).
+     * Nombre y cargo (ej: "Laura Méndez, CTO de Empresa X").
+     * Calificación: 5 estrellas (⭐ con HTML/CSS o FontAwesome).
+     * Texto del testimonio (30-50 palabras, positivo, relacionado con desarrollo web).
+   - Las tarjetas deben tener borde redondeado (border-radius: 20px) y sombra suave.
+
+6. Formulario de Contacto (solo UI, sin backend real):
+   - Campos: Nombre completo, Correo electrónico, Mensaje.
+   - Botón de envío con color de acento.
+   - Al hacer clic en "Enviar", mostrar un alert() de JavaScript: "¡Gracias [Nombre]! Nos pondremos en contacto contigo pronto (demo)."
+   - Estilos :focus con borde celeste (#00B4D8).
+   - Placeholders amigables.
+
+7. Footer:
+   - Logo o nombre "Grupo Clouds" + descripción corta.
+   - Enlaces a redes sociales: Íconos de Facebook, Instagram, LinkedIn, Twitter (usar FontAwesome con href="#").
+   - Copyright dinámico con el año actual (JavaScript).
+   - NO incluir política de privacidad ni enlaces legales.
+   - Fondo gris muy claro o azul profundo (elige el que mejor contraste con blanco).
+
+Requisitos técnicos obligatorios:
+- Responsividad total: Flexbox y CSS Grid. Desktop (1024px), tablet (768px-1024px), móvil (768px).
+- HTML semántico: header, main, section, footer.
+- CSS interno o en style;, JavaScript interno al final del body.
+- Accesibilidad: Atributos alt en imágenes, aria-label en íconos de redes sociales, contraste suficiente (texto oscuro sobre fondo claro).
+- Animaciones suaves: Hover en botones y tarjetas. Opcional: fade-in suave al hacer scroll (puede ser simple, no obligatorio).
+- Fuentes: Google Fonts (Poppins + Inter) con display=swap.
+- Incluir CDN de FontAwesome 6 (https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css).</code></pre>
+                <!-- FIN DEL PROMPT REAL -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Dynamic date helper in Spanish (e.g., "11 de junio, 2026")
+            const dateElement = document.getElementById('current-date');
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const today = new Date();
+            
+            // Adjust to June 2026 as per target date if needed, or use the current year/date
+            // The prompt requests "Fecha actual (dinámica con JavaScript o estática 2026)". 
+            // We set current date but ensure the year is 2026 if today is in 2026.
+            const dateStr = today.toLocaleDateString('es-ES', options);
+            dateElement.textContent = dateStr;
+
+            // Modal elements
+            const modal = document.getElementById('prompt-modal');
+            const openBtn = document.getElementById('open-prompt-btn');
+            const closeBtn = document.getElementById('close-modal-btn');
+            const copyBtn = document.getElementById('copy-btn');
+            const promptContent = document.getElementById('prompt-content');
+
+            // Open Modal
+            openBtn.addEventListener('click', () => {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            });
+
+            // Close Modal function
+            const closeModal = () => {
+                modal.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+            };
+
+            closeBtn.addEventListener('click', closeModal);
+
+            // Close Modal clicking outside content
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Keyboard navigation (ESC to close)
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+
+            // Copy to clipboard functionality
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(promptContent.textContent.trim())
+                    .then(() => {
+                        const copyIcon = copyBtn.querySelector('i');
+                        const copyText = copyBtn.querySelector('span');
+                        
+                        // Success Feedback
+                        copyIcon.className = 'fa-solid fa-check';
+                        copyIcon.style.color = '#10b981';
+                        copyText.textContent = '¡Copiado!';
+                        copyBtn.style.borderColor = '#10b981';
+                        
+                        // Reset after 2 seconds
+                        setTimeout(() => {
+                            copyIcon.className = 'fa-regular fa-copy';
+                            copyIcon.style.color = '';
+                            copyText.textContent = 'Copiar';
+                            copyBtn.style.borderColor = '';
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Error al copiar al portapapeles: ', err);
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

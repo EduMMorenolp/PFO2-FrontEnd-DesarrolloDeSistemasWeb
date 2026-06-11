@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Grupo Clouds - Desarrollo web moderno y profesional. Soluciones digitales a medida para tu negocio.">
+  <title>Grupo Clouds · Desarrollo Web Profesional</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: #212529;
+      background: #FFFFFF;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ---------- HEADER ---------- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid #e9ecef;
+    }
+
+    header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .logo {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      color: #023E8A;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: #00B4D8;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    nav a {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #212529;
+      transition: color 0.25s;
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #00B4D8;
+      transition: width 0.3s;
+    }
+
+    nav a:hover {
+      color: #00B4D8;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: #023E8A;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    @media (max-width: 767px) {
+      .hamburger {
+        display: block;
+      }
+
+      nav {
+        position: fixed;
+        top: 68px;
+        left: 0;
+        right: 0;
+        background: #FFFFFF;
+        flex-direction: column;
+        gap: 0;
+        padding: 12px 24px 20px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        transform: translateY(-120%);
+        opacity: 0;
+        transition: transform 0.35s ease, opacity 0.3s ease;
+        pointer-events: none;
+      }
+
+      nav.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      nav a {
+        display: block;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        width: 100%;
+      }
+
+      nav a:last-child {
+        border-bottom: none;
+      }
+
+      nav a::after {
+        display: none;
+      }
+    }
+
+    /* ---------- HERO ---------- */
+    #hero {
+      min-height: calc(100vh - 68px);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #F0F9FF 0%, #FFFFFF 50%, #E0F7FA 100%);
+    }
+
+    #hero .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      padding-top: 40px;
+      padding-bottom: 40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-content h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #023E8A;
+      margin-bottom: 20px;
+    }
+
+    .hero-content h1 span {
+      color: #00B4D8;
+    }
+
+    .hero-content p {
+      font-size: 1.1rem;
+      color: #6C757D;
+      margin-bottom: 32px;
+      max-width: 480px;
+    }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #023E8A;
+      color: #FFFFFF;
+      padding: 16px 36px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.25s, box-shadow 0.3s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-cta:hover {
+      background: #00B4D8;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0, 180, 216, 0.35);
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-shape {
+      width: 380px;
+      height: 380px;
+      background: linear-gradient(145deg, #00B4D8, #0096C7);
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      animation: morph 8s ease-in-out infinite;
+      box-shadow: 0 20px 60px rgba(0, 180, 216, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-shape i {
+      font-size: 5rem;
+      color: #FFFFFF;
+      opacity: 0.9;
+    }
+
+    @keyframes morph {
+      0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+      25% { border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%; }
+      50% { border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%; }
+      75% { border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%; }
+    }
+
+    @media (max-width: 767px) {
+      #hero .container {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 32px;
+      }
+
+      .hero-content h1 {
+        font-size: 2rem;
+      }
+
+      .hero-content p {
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-shape {
+        width: 240px;
+        height: 240px;
+      }
+
+      .hero-shape i {
+        font-size: 3.2rem;
+      }
+
+      .hero-visual {
+        order: -1;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      #hero .container {
+        gap: 32px;
+      }
+
+      .hero-content h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero-shape {
+        width: 280px;
+        height: 280px;
+      }
+
+      .hero-shape i {
+        font-size: 3.6rem;
+      }
+    }
+
+    /* ---------- COMMON SECTIONS ---------- */
+    section {
+      padding: 90px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      color: #023E8A;
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: #6C757D;
+      max-width: 560px;
+      margin: 0 auto 52px;
+      font-size: 1.05rem;
+    }
+
+    /* ---------- ABOUT ---------- */
+    #about {
+      background: #FFFFFF;
+    }
+
+    #about .container {
+      max-width: 900px;
+      text-align: center;
+    }
+
+    #about p {
+      font-size: 1.05rem;
+      color: #212529;
+      margin-bottom: 24px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+      margin-top: 40px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #00B4D8;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #6C757D;
+      margin-top: 2px;
+    }
+
+    /* ---------- SERVICES ---------- */
+    #services {
+      background: #F0F9FF;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .service-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 40px 28px;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+      transition: transform 0.35s, box-shadow 0.35s, border-color 0.3s;
+      border: 1px solid transparent;
+    }
+
+    .service-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      border-color: #E0F7FA;
+    }
+
+    .service-card i {
+      font-size: 2.4rem;
+      color: #00B4D8;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .service-card h3 {
+      font-size: 1.2rem;
+      color: #023E8A;
+      margin-bottom: 12px;
+    }
+
+    .service-card p {
+      font-size: 0.95rem;
+      color: #6C757D;
+    }
+
+    @media (max-width: 767px) {
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* ---------- TESTIMONIALS ---------- */
+    #testimonials {
+      background: #FFFFFF;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .testimonial-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 36px 32px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+      border: 1px solid #f0f0f0;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 32px rgba(0,0,0,0.08);
+    }
+
+    .testimonial-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #00B4D8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      color: #FFFFFF;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .testimonial-info h4 {
+      font-size: 1rem;
+      color: #023E8A;
+    }
+
+    .testimonial-info span {
+      font-size: 0.85rem;
+      color: #6C757D;
+    }
+
+    .stars {
+      color: #f4b942;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+    }
+
+    .testimonial-card blockquote {
+      font-style: italic;
+      color: #212529;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 767px) {
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ---------- CONTACT ---------- */
+    #contact {
+      background: #F0F9FF;
+    }
+
+    #contact .container {
+      max-width: 640px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    form label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #212529;
+      margin-bottom: 2px;
+    }
+
+    form input,
+    form textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1.5px solid #dee2e6;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: #212529;
+      background: #FFFFFF;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      outline: none;
+    }
+
+    form input:focus,
+    form textarea:focus {
+      border-color: #00B4D8;
+      box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.15);
+    }
+
+    form textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .btn-submit {
+      align-self: flex-start;
+      background: #023E8A;
+      color: #FFFFFF;
+      padding: 16px 40px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.25s, box-shadow 0.3s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-submit:hover {
+      background: #00B4D8;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0, 180, 216, 0.3);
+    }
+
+    @media (max-width: 767px) {
+      .btn-submit {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      background: #023E8A;
+      color: #FFFFFF;
+      padding: 48px 0 28px;
+    }
+
+    footer .container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    footer h3 {
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+      color: #FFFFFF;
+    }
+
+    footer h3 span {
+      color: #00B4D8;
+    }
+
+    footer p {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.9rem;
+      max-width: 360px;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 18px;
+      justify-self: end;
+      margin-top: 6px;
+    }
+
+    .social-links a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      color: #FFFFFF;
+      font-size: 1.15rem;
+      transition: background 0.3s, transform 0.25s;
+    }
+
+    .social-links a:hover {
+      background: #00B4D8;
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+      grid-column: 1 / -1;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 22px;
+      margin-top: 8px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.6);
+    }
+
+    @media (max-width: 767px) {
+      footer .container {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .social-links {
+        justify-self: center;
+      }
+
+      footer p {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== HEADER ====== -->
+  <header>
+    <div class="container">
+      <a href="#hero" class="logo">GRUPO<span>C</span>LOUDS</a>
+      <button class="hamburger" id="hamburger" aria-label="Abrir menú de navegación" aria-expanded="false">
+        <i class="fas fa-bars"></i>
+      </button>
+      <nav id="nav-menu">
+        <a href="#hero">Inicio</a>
+        <a href="#about">Sobre nosotros</a>
+        <a href="#services">Servicios</a>
+        <a href="#testimonials">Testimonios</a>
+        <a href="#contact">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ====== HERO ====== -->
+    <section id="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Desarrollo web <span>moderno y profesional</span></h1>
+          <p>En Grupo Clouds creamos soluciones digitales a medida que impulsan tu negocio. Diseño, tecnología y estrategia en un solo lugar.</p>
+          <a href="#contact" class="btn-cta">
+            Cotiza tu proyecto <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-shape">
+            <i class="fas fa-cloud"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== ABOUT ====== -->
+    <section id="about">
+      <div class="container">
+        <h2 class="section-title">Sobre Grupo Clouds</h2>
+        <p>
+          Somos un equipo apasionado por el desarrollo web y la transformación digital. En Grupo Clouds combinamos diseño estratégico, tecnologías modernas y buenas prácticas de desarrollo para construir sitios web y aplicaciones que realmente marcan la diferencia. Trabajamos codo a codo con cada cliente para entender su visión, optimizar su presencia online y entregar resultados medibles. Creemos en un internet más rápido, accesible y bien diseñado, y ponemos toda nuestra experiencia al servicio de tu proyecto.
+        </p>
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-number">+50</div>
+            <div class="stat-label">Proyectos entregados</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Clientes satisfechos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">4.9</div>
+            <div class="stat-label">Calificación promedio</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== SERVICES ====== -->
+    <section id="services">
+      <div class="container">
+        <h2 class="section-title">Nuestros servicios</h2>
+        <p class="section-subtitle">Todo lo que necesitas para llevar tu negocio al siguiente nivel digital.</p>
+        <div class="services-grid">
+          <div class="service-card">
+            <i class="fas fa-globe"></i>
+            <h3>Desarrollo Web a Medida</h3>
+            <p>Creamos sitios y aplicaciones web personalizadas con las tecnologías más modernas del mercado.</p>
+          </div>
+          <div class="service-card">
+            <i class="fas fa-rocket"></i>
+            <h3>Optimización y Rendimiento</h3>
+            <p>Maximizamos la velocidad, el SEO y la experiencia de usuario para que tu sitio destaque.</p>
+          </div>
+          <div class="service-card">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Soporte y Mantenimiento</h3>
+            <p>Nos encargamos de mantener tu web segura, actualizada y funcionando sin contratiempos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== TESTIMONIALS ====== -->
+    <section id="testimonials">
+      <div class="container">
+        <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+        <p class="section-subtitle">La confianza de quienes ya trabajaron con nosotros es nuestro mejor aval.</p>
+        <div class="testimonials-grid">
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar" aria-label="Foto de Laura Méndez">LM</div>
+              <div class="testimonial-info">
+                <h4>Laura Méndez</h4>
+                <span>CTO de NovaTech</span>
+              </div>
+            </div>
+            <div class="stars" aria-label="5 estrellas">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <blockquote>"Grupo Clouds transformó por completo nuestra plataforma. El nuevo diseño es más rápido, intuitivo y accesible. Sin duda, el mejor equipo con el que hemos trabajado."</blockquote>
+          </div>
+          <div class="testimonial-card">
+            <div class="testimonial-header">
+              <div class="testimonial-avatar" aria-label="Foto de Carlos Ruiz">CR</div>
+              <div class="testimonial-info">
+                <h4>Carlos Ruiz</h4>
+                <span>CEO de MiPyme Digital</span>
+              </div>
+            </div>
+            <div class="stars" aria-label="5 estrellas">
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+              <i class="fas fa-star"></i>
+            </div>
+            <blockquote>"Necesitábamos un sitio web profesional y funcional para nuestro negocio, y Grupo Clouds superó todas las expectativas. Entregaron a tiempo y con una calidad impecable."</blockquote>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== CONTACT ====== -->
+    <section id="contact">
+      <div class="container">
+        <h2 class="section-title">Trabajemos juntos</h2>
+        <p class="section-subtitle">Cuéntanos sobre tu proyecto y te responderemos en menos de 24 horas.</p>
+        <form id="contact-form" novalidate>
+          <div class="form-group">
+            <label for="name">Nombre completo</label>
+            <input type="text" id="name" name="name" placeholder="Ej: Juan Pérez" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <input type="email" id="email" name="email" placeholder="Ej: juan@ejemplo.com" required>
+          </div>
+          <div class="form-group">
+            <label for="message">Mensaje</label>
+            <textarea id="message" name="message" placeholder="Cuéntanos en qué podemos ayudarte..." required></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Enviar mensaje <i class="fas fa-paper-plane"></i></button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ====== FOOTER ====== -->
+  <footer>
+    <div class="container">
+      <div>
+        <h3>GRUPO<span style="color:#00B4D8">C</span>LOUDS</h3>
+        <p>Desarrollo web moderno y profesional. Creamos soluciones digitales que impulsan tu negocio al siguiente nivel.</p>
+      </div>
+      <div class="social-links">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+      </div>
+      <div class="footer-bottom">
+        &copy; <span id="year"></span> Grupo Clouds. Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // --- Hamburger menu ---
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('nav-menu');
+
+    hamburger.addEventListener('click', () => {
+      navMenu.classList.toggle('open');
+      const expanded = navMenu.classList.contains('open');
+      hamburger.setAttribute('aria-expanded', expanded);
+    });
+
+    document.querySelectorAll('#nav-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // --- Contact form ---
+    document.getElementById('contact-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      if (!name) {
+        alert('Por favor, ingresa tu nombre.');
+        return;
+      }
+      alert('¡Gracias ' + name + '! Nos pondremos en contacto contigo pronto (demo).');
+      this.reset();
+    });
+
+    // --- Dynamic year ---
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
